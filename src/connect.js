@@ -13,93 +13,110 @@ export const injectStore = tinyAppStore => {
 export default function connect(
   mapStateToProps = defaultMapStateToProps,
   mapDispatchToProps = defaultMapDispatchToProps,
-  options = {},
 ) {
-  const finalMapDispatchToProps = wrapActionCreators(mapDispatchToProps)
+  let finalMapDispatchToProps
 
-  let stateProps = {}
-  let dispatchProps = {}
-  const finalOptions = {
-    onLoad: noop,
-    onUnload: noop,
-    didMount: noop,
-    didUnMount: noop,
-    ...options,
+  if (typeof mapDispatchToProps === 'function') {
+    finalMapDispatchToProps = mapDispatchToProps
+  } else {
+    finalMapDispatchToProps = wrapActionCreators(mapDispatchToProps)
   }
 
-  function handleStoreChange() {
-    if (!this.unsubscribe) {
-      return
+  return function withConnect(config) {
+    let stateProps = {}
+    let dispatchProps = {}
+    const finalConfig = {
+      onLoad: noop,
+      onUnload: noop,
+      didMount: noop,
+      didUnMount: noop,
+      ...config,
     }
 
-    let haveStatePropsChanged = false
-    let haveDispatchPropsChanged = false
+    function handleStoreChange() {
+      if (!this.unsubscribe) {
+        return
+      }
 
-    const currentState = store.getState()
-    const nextStateProps = mapStateToProps(currentState, this.props)
-    const nextDispatchProps = finalMapDispatchToProps(store.dispatch)
+      let haveStatePropsChanged = false
+      let haveDispatchPropsChanged = false
 
-    if (!shallowEqual(nextStateProps, stateProps)) {
-      haveStatePropsChanged = true
-      stateProps = nextStateProps
+      const currentState = store.getState()
+      const nextStateProps = mapStateToProps(currentState, this.props)
+      const nextDispatchProps = finalMapDispatchToProps(
+        store.dispatch,
+        this.props,
+      )
+
+      if (!shallowEqual(nextStateProps, stateProps)) {
+        haveStatePropsChanged = true
+        stateProps = nextStateProps
+      }
+
+      if (!shallowEqual(nextDispatchProps, dispatchProps)) {
+        haveDispatchPropsChanged = true
+        dispatchProps = nextDispatchProps
+      }
+
+      if (haveStatePropsChanged || haveDispatchPropsChanged) {
+        this.setData({
+          ...stateProps,
+          ...dispatchProps,
+        })
+      }
     }
 
-    if (!shallowEqual(nextDispatchProps, dispatchProps)) {
-      haveDispatchPropsChanged = true
-      dispatchProps = nextDispatchProps
+    function trySubscribe() {
+      this.unsubscribe = store.subscribe(handleStoreChange.bind(this))
+      handleStoreChange.call(this)
     }
 
-    if (haveStatePropsChanged || haveDispatchPropsChanged) {
-      this.setData({
-        ...stateProps,
-        ...dispatchProps,
-      })
+    function tryUnsubscribe() {
+      if (this.unsubscribe) {
+        this.unsubscribe()
+        this.unsubscribe = null
+      }
     }
-  }
 
-  function trySubscribe() {
-    this.unsubscribe = store.subscribe(handleStoreChange.bind(this))
-    handleStoreChange.call(this)
-  }
+    function onLoad(args) {
+      trySubscribe.apply(this, args)
 
-  function tryUnsubscribe() {
-    if (this.unsubscribe) {
-      this.unsubscribe()
-      this.unsubscribe = null
+      if (config.onLoad) {
+        config.onLoad.apply(this, args)
+      }
     }
-  }
 
-  function onLoad(args) {
-    trySubscribe.apply(this, args)
+    function onUnload(args) {
+      tryUnsubscribe.apply(this)
 
-    if (options.onLoad) {
-      options.onLoad.apply(this, args)
+      finalConfig.onUnload.apply(this, args)
     }
-  }
 
-  function onUnload(args) {
-    tryUnsubscribe.apply(this)
+    function didMount(args) {
+      trySubscribe.apply(this, args)
 
-    finalOptions.onUnload.apply(this, args)
-  }
+      finalConfig.didMount.apply(this, args)
+    }
 
-  function didMount(args) {
-    trySubscribe.apply(this, args)
+    function didUnmount(args) {
+      tryUnsubscribe.apply(this)
 
-    finalOptions.didMount.apply(this, args)
-  }
+      finalConfig.didUnmount.apply(this, args)
+    }
 
-  function didUnmount(args) {
-    tryUnsubscribe.apply(this)
+    const bindActionCreators = finalMapDispatchToProps(store.dispatch)
 
-    finalOptions.didUnmount.apply(this, args)
-  }
-
-  return {
-    ...finalOptions,
-    onLoad,
-    onUnload,
-    didMount,
-    didUnmount,
+    return {
+      ...finalConfig,
+      onLoad,
+      onUnload,
+      didMount,
+      didUnmount,
+      ...bindActionCreators,
+      methods: {
+        ...finalConfig.methods,
+        ...bindActionCreators,
+      },
+    }
   }
 }
