@@ -1,6 +1,5 @@
 import shallowEqual from './utils/shallowEqual'
 import wrapActionCreators from './utils/wrapActionCreators'
-import noop from './utils/noop'
 import merge from './utils/merge'
 
 const defaultMapStateToProps = () => ({})
