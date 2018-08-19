@@ -1,6 +1,7 @@
 import shallowEqual from './utils/shallowEqual'
 import wrapActionCreators from './utils/wrapActionCreators'
 import noop from './utils/noop'
+import merge from './utils/merge'
 
 const defaultMapStateToProps = () => ({})
 const defaultMapDispatchToProps = dispatch => ({ dispatch })
@@ -25,13 +26,6 @@ export default function connect(
   return function withConnect(config) {
     let stateProps = {}
     let dispatchProps = {}
-    const finalConfig = {
-      onLoad: noop,
-      onUnload: noop,
-      didMount: noop,
-      didUnMount: noop,
-      ...config,
-    }
 
     function handleStoreChange() {
       if (!this.unsubscribe) {
@@ -78,45 +72,31 @@ export default function connect(
       }
     }
 
-    function onLoad(args) {
+    function onLoad(...args) {
       trySubscribe.apply(this, args)
-
-      if (config.onLoad) {
-        config.onLoad.apply(this, args)
-      }
     }
 
-    function onUnload(args) {
-      tryUnsubscribe.apply(this)
-
-      finalConfig.onUnload.apply(this, args)
+    function onUnload(...args) {
+      tryUnsubscribe.apply(this, args)
     }
 
-    function didMount(args) {
+    function didMount(...args) {
       trySubscribe.apply(this, args)
-
-      finalConfig.didMount.apply(this, args)
     }
 
-    function didUnmount(args) {
-      tryUnsubscribe.apply(this)
-
-      finalConfig.didUnmount.apply(this, args)
+    function didUnmount(...args) {
+      tryUnsubscribe.apply(this, args)
     }
 
     const bindActionCreators = finalMapDispatchToProps(store.dispatch)
 
-    return {
-      ...finalConfig,
+    return merge(config, {
       onLoad,
       onUnload,
       didMount,
       didUnmount,
-      ...bindActionCreators,
-      methods: {
-        ...finalConfig.methods,
-        ...bindActionCreators,
-      },
-    }
+      ...bindActionCreators, // bind action creators on `this`
+      methods: bindActionCreators, // merge with Component.methods
+    })
   }
 }

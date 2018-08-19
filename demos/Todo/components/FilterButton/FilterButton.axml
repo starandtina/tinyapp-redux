@@ -1,0 +1,3 @@
+<button type="{{active ? 'primary' : 'normal'}}" class="{{className}}" onTap="handleFilterChange">
+  <slot />
+</button>

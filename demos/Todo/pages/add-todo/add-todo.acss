@@ -1,0 +1,16 @@
+.page-add-todo {
+  flex: 1;
+}
+
+.add-todo {
+  height: 200px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.add-todo-input {
+  font-size: 20px;
+  padding: 10px;
+}

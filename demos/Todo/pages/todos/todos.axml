@@ -1,0 +1,25 @@
+<view class="page-todos">
+  <view class="user">
+    <image class="avatar" src="{{user.avatar}}" background-size="cover"></image>
+    <view class="nickname">{{user.nickName}}'s Todo List</view>
+  </view>
+  <view class="todo-items">
+    <checkbox-group class="todo-items-group">
+      <label class="todo-item" a:for="{{todos}}">
+        <checkbox value="{{item.text}}" data-id="{{item.id}}" checked="{{item.completed}}" onChange="onTodoChanged" />
+        <text class="{{item.completed ? 'checked' : ''}}">{{item.text}}</text>
+      </label>
+    </checkbox-group>
+    <view>Total: {{todos.length}} {{filter}}</view>
+    <view class="todo-item">
+      <button onTap="addTodo">Add Todo</button>
+    </view>
+    <view class="filter-button-group">
+      <filter-button class="filter-button" filter="{{VisibilityFilters.SHOW_ALL}}">All</filter-button>
+      <filter-button class="filter-button" filter="{{VisibilityFilters.SHOW_ACTIVE}}">Active</filter-button>
+      <filter-button class="filter-button" filter="{{VisibilityFilters.SHOW_COMPLETED}}">Completed</filter-button>
+    </view>
+
+    <view class="todos-footer-tip">Built with tinyapp-redux</view>
+  </view>
+</view>
