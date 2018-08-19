@@ -1,6 +1,6 @@
 {
   "name": "tinyapp-redux",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Tinyapp bindings for Redux",
   "main": "./lib/index.js",
   "module": "es/index.js",
