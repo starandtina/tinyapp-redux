@@ -1,3 +1,4 @@
 import connect, { injectStore } from './connect'
+import Provider from './Provider'
 
-export { connect, injectStore }
+export { Provider, connect, injectStore }

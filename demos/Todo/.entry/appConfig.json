@@ -1,0 +1,15 @@
+{
+  "pages": [
+    "pages/todos/todos",
+    "pages/add-todo/add-todo"
+  ],
+  "launchParams": {
+    "pages/todos/todos": {
+      "defaultTitle": "Todo App"
+    },
+    "pages/add-todo/add-todo": {
+      "defaultTitle": "Todo App"
+    }
+  },
+  "prerenderPage": "index.html"
+}

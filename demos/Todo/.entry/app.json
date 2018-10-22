@@ -1,0 +1,17 @@
+{
+  "app": {
+    "pages": [
+      "pages/todos/todos",
+      "pages/add-todo/add-todo"
+    ],
+    "window": {
+      "defaultTitle": "Todo App"
+    },
+    "dependencies": {
+      "react-native": "0.52.0",
+      "react": "16.2.0"
+    }
+  },
+  "pages/todos/todos": {},
+  "pages/add-todo/add-todo": {}
+}

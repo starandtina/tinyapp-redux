@@ -29,8 +29,6 @@ const initState = {
 }
 
 App({
-  ...initState,
-  userInfo: null,
   onLaunch() {
     this.store = createStore(rootReducer, initState, applyMiddleware(logger))
 
@@ -39,7 +37,23 @@ App({
 })
 ```
 
-### 2、Connect your Page or Components
+或者通过默认提供的 `Provider` 函数来注入当前 `store`
+
+```JavaScript
+import { Provider } from 'tinyapp-redux'
+import store from './createStore'
+
+App(
+  Provider(store)({
+    onLaunch(options) {
+      // 小程序初始化
+    },
+    ...
+  }),
+)
+```
+
+### 2、Connect the state with your Page or Component
 
 ```JavaScript
 import { connect } from 'tinyapp-redux'
@@ -76,8 +90,8 @@ Page(
 ## Demos
 
 - [x] Todo
-- [] Counter
-- [] Async
+- [ ] Counter
+- [ ] Async
 
 ## License
 

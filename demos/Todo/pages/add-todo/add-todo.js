@@ -1,9 +1,7 @@
 import { connect } from 'tinyapp-redux'
-
 import { addTodo } from '../../actions'
 
 const app = getApp()
-
 const mapStateToProps = state => {
   return {
     ...state,
