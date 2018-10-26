@@ -87,7 +87,10 @@ export default function connect(
       tryUnsubscribe.apply(this, args)
     }
 
-    const bindActionCreators = finalMapDispatchToProps(store.dispatch)
+    const bindActionCreators = {
+      ...finalMapDispatchToProps(store.dispatch),
+      dispatch: store.dispatch,
+    }
 
     return merge(config, {
       onLoad,
