@@ -76,6 +76,8 @@ export default function connect(
     }
 
     function onUnload(...args) {
+      stateProps = null
+      dispatchProps = null
       tryUnsubscribe.apply(this, args)
     }
 
