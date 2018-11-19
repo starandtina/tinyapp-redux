@@ -84,6 +84,8 @@ export default function connect(
     }
 
     function didUnmount(...args) {
+      stateProps = null
+      dispatchProps = null
       tryUnsubscribe.apply(this, args)
     }
 

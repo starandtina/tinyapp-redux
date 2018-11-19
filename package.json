@@ -3,7 +3,7 @@
   "version": "1.2.2",
   "description": "Tinyapp bindings for Redux",
   "main": "./lib/index.js",
-  "module": "es/index.js",
+  "module": "./es/index.js",
   "author": "starandtina <kandmforever@126.com>",
   "files": [
     "es",
