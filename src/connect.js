@@ -22,12 +22,8 @@ export default function connect(
     finalMapDispatchToProps = wrapActionCreators(mapDispatchToProps)
   }
 
-  return function withConnect(config = {}) {
-    let stateProps = {}
-    let dispatchProps = {}
-
+  return function withConnect(config) {
     const { pure = true } = config
-
     function handleStoreChange() {
       if (!this.unsubscribe) {
         return
@@ -43,25 +39,27 @@ export default function connect(
         this.props,
       )
 
-      if (!pure || !shallowEqual(nextStateProps, stateProps)) {
+      if (!pure || !shallowEqual(nextStateProps, this.stateProps)) {
         haveStatePropsChanged = true
-        stateProps = nextStateProps
+        this.stateProps = nextStateProps
       }
 
-      if (!pure || !shallowEqual(nextDispatchProps, dispatchProps)) {
+      if (!pure || !shallowEqual(nextDispatchProps, this.dispatchProps)) {
         haveDispatchPropsChanged = true
-        dispatchProps = nextDispatchProps
+        this.dispatchProps = nextDispatchProps
       }
 
       if (haveStatePropsChanged || haveDispatchPropsChanged) {
         this.setData({
-          ...stateProps,
-          ...dispatchProps,
+          ...this.stateProps,
+          ...this.dispatchProps,
         })
       }
     }
 
     function trySubscribe() {
+      this.stateProps = {};
+      this.dispatchProps = {}
       this.unsubscribe = store.subscribe(handleStoreChange.bind(this))
       handleStoreChange.call(this)
     }
@@ -78,8 +76,8 @@ export default function connect(
     }
 
     function onUnload(...args) {
-      stateProps = null
-      dispatchProps = null
+      this.stateProps = null
+      this.dispatchProps = null
       tryUnsubscribe.apply(this, args)
     }
 
@@ -88,8 +86,8 @@ export default function connect(
     }
 
     function didUnmount(...args) {
-      stateProps = null
-      dispatchProps = null
+      this.stateProps = null
+      this.dispatchProps = null
       tryUnsubscribe.apply(this, args)
     }
 
