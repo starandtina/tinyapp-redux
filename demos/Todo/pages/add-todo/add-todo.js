@@ -2,11 +2,7 @@ import { connect } from 'tinyapp-redux'
 import { addTodo } from '../../actions'
 
 const app = getApp()
-const mapStateToProps = state => {
-  return {
-    ...state,
-  }
-}
+const mapStateToProps = state => state
 
 Page(
   connect(
@@ -26,6 +22,9 @@ Page(
     add() {
       this.addTodo(this.data.inputValue)
       my.navigateBack()
+    },
+    redirectToTodos() {
+      my.navigateTo({ url: '../todos/todos' })
     },
   }),
 )

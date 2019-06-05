@@ -22,6 +22,10 @@ Page(
   )({
     data: { VisibilityFilters },
     onLoad() {
+      // my.alert({
+      //   title: 'xxx',
+      //   content: JSON.stringify(getCurrentPages().length),
+      // })
       app.getUserInfo().then(user =>
         this.setData({
           user,

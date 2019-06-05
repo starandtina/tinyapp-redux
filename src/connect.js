@@ -22,9 +22,11 @@ export default function connect(
     finalMapDispatchToProps = wrapActionCreators(mapDispatchToProps)
   }
 
-  return function withConnect(config) {
+  return function withConnect(config = {}) {
     let stateProps = {}
     let dispatchProps = {}
+
+    const { pure = true } = config
 
     function handleStoreChange() {
       if (!this.unsubscribe) {
@@ -41,12 +43,12 @@ export default function connect(
         this.props,
       )
 
-      if (!shallowEqual(nextStateProps, stateProps)) {
+      if (!pure || !shallowEqual(nextStateProps, stateProps)) {
         haveStatePropsChanged = true
         stateProps = nextStateProps
       }
 
-      if (!shallowEqual(nextDispatchProps, dispatchProps)) {
+      if (!pure || !shallowEqual(nextDispatchProps, dispatchProps)) {
         haveDispatchPropsChanged = true
         dispatchProps = nextDispatchProps
       }

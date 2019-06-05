@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <link rel="manifest" href="manifest.json"/>
     <meta charset="utf-8">
@@ -8,6 +8,9 @@
     <script>
       if (!window.Promise) {
         document.writeln('<script src="https://appx/es6-promise.min.js"' + ' >' + '<' + '/' + 'script>');
+      }
+      if (!window.Set || !window.Map) {
+        document.writeln('<script src="https://gw.alipayobjects.com/as/g/appx_release/deps/1.0.0/es6-set-map.js"' + ' >' + '<' + '/' + 'script>');
       }
     </script>
     <script>

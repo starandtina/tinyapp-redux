@@ -8,25 +8,29 @@ App(
       return new Promise((resolve, reject) => {
         if (this.userInfo) resolve(this.userInfo)
 
-        my.getAuthCode({
-          scopes: ['auth_user'],
-          success: authcode => {
-            console.info(authcode)
-
-            my.getAuthUserInfo({
-              success: res => {
-                this.userInfo = res
-                resolve(this.userInfo)
-              },
-              fail: () => {
-                reject({})
-              },
-            })
-          },
-          fail: () => {
-            reject({})
-          },
+        resolve({
+          avatar: 'http://placehold.it/48x48',
+          nickName: 'starandtina',
         })
+        // my.getAuthCode({
+        //   scopes: ['auth_user'],
+        //   success: authcode => {
+        //     console.info(authcode)
+
+        //     my.getAuthUserInfo({
+        //       success: res => {
+        //         this.userInfo = res
+        //         resolve(this.userInfo)
+        //       },
+        //       fail: () => {
+        //         reject({})
+        //       },
+        //     })
+        //   },
+        //   fail: () => {
+        //     reject({})
+        //   },
+        // })
       })
     },
   }),

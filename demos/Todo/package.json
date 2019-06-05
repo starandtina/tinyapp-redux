@@ -6,9 +6,11 @@
   "dependencies": {
     "redux": "^4.0.0",
     "redux-logger": "^3.0.6",
-    "tinyapp-redux": "^1.2.3"
+    "tinyapp-redux": "^1.2.4"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "prettier": "^1.17.1"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
